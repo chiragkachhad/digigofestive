@@ -1,0 +1,58 @@
+================================================================================
+DIGIFESTIVE MAKER (BY DIGIGOINDIA) 🪔⚡
+COMPLETE PLAY STORE PUBLISHING & COMMERCIAL SETUP GUIDE
+================================================================================
+
+App Name: DigiFestive Maker
+Brand Name: DigiGoIndia
+Official GPay Number: 7486962020
+Official UPI ID: kachhad.2000@ptaxis
+
+--------------------------------------------------------------------------------
+1. HOW TO TEST AND RUN THE APP RIGHT NOW:
+--------------------------------------------------------------------------------
+- Open `index.html` in your mobile Chrome or computer browser.
+- It is a fully functional offline-capable Progressive Web App (PWA).
+- On mobile: Tap Chrome menu (3 dots) -> "Add to Home Screen" or "Install App".
+  It will install with a native app icon and run full-screen without any browser bar!
+
+--------------------------------------------------------------------------------
+2. HOW TO CONVERT INTO AN ANDROID APK / AAB FOR GOOGLE PLAY STORE:
+--------------------------------------------------------------------------------
+You have 3 easy, zero-code industry standard ways to generate the Google Play APK:
+
+OPTION A: PWABuilder (Fastest - 100% Free by Microsoft)
+1. Upload this `digifestive_maker_app` folder to any free hosting (Netlify / Vercel / GitHub Pages / Hostinger).
+2. Go to: https://www.pwabuilder.com
+3. Enter your website URL and click "Start".
+4. It will read `manifest.json` and generate an Android `.AAB` (Android App Bundle) package signed for Google Play Store!
+5. Download the package and upload it directly to your Google Play Console account.
+
+OPTION B: Bubblewrap CLI (Official Google Tool)
+1. Run: `npm i -g @bubblewrap/cli`
+2. Run: `bubblewrap init --manifest=https://yourdomain.com/manifest.json`
+3. Run: `bubblewrap build` -> Gives you `app-release-signed.apk` and `.aab`.
+
+OPTION C: Capacitor / Cordova Wrapper (Offline Local Build)
+- Wrap this web app into an Android Studio project via Capacitor:
+  `npm install @capacitor/core @capacitor/cli @capacitor/android`
+  `npx cap init DigiFestiveMaker com.digigoindia.festivemaker`
+  `npx cap add android`
+  `npx cap open android` -> Build APK in Android Studio!
+
+--------------------------------------------------------------------------------
+3. USER REGISTRATION & CSV DATABASE SYSTEM:
+--------------------------------------------------------------------------------
+- Whenever a user enters their Name, Mobile Number, Business Name, and City in the app, it saves securely to the local database.
+- Go to the "એડમિન (Admin)" tab inside the app.
+- Click the golden button "⬇️ Download CSV".
+- An instant `.csv` file (`DigiFestive_Users_Database.csv`) will download containing all your registered users, which you can open in Microsoft Excel or Google Sheets.
+
+--------------------------------------------------------------------------------
+4. PAYMENT GATEWAY & GPAY SYSTEM:
+--------------------------------------------------------------------------------
+- Integrated with UPI ID: `kachhad.2000@ptaxis` & Phone: `7486962020`.
+- Direct 1-Tap UPI Intent button: When the user clicks "GPay / PhonePe / Paytm થી ચૂકવો (₹99)", their phone will directly open their installed UPI app with your VPA and amount pre-filled!
+- Built-in dynamic QR code generator pointing to your exact UPI address.
+- 1-Tap WhatsApp Payment Confirmation button sending verification message directly to 7486962020.
+================================================================================

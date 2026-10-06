@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="gu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>DigiFestive Maker - By DigiGoIndia</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#721128">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+:root {
+  --bg: #120407;
+  --surface: #1e0910;
+  --surface-2: #2d0e19;
+  --gold: #f6c042;
+  --gold-glow: #ffd978;
+  --orange: #f26829;
+  --crimson: #a61e38;
+  --green: #2ecc71;
+  --blue: #3498db;
+  --text: #fff7eb;
+  --subtext: #d4b8b2;
+  --border: #4a1c27;
+  --safe-bottom: env(safe-area-inset-bottom, 16px);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding-bottom: calc(75px + var(--safe-bottom));
+  min-height: 100vh;
+}
+
+/* TOP APP HEADER */
+.app-header {
+  background: linear-gradient(135deg, #721128 0%, #a61e38 50%, #e0531c 100%);
+  padding: 14px 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(246, 192, 66, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-icon { font-size: 26px; filter: drop-shadow(0 0 6px #ffc107); }
+.brand-title { font-size: 1.15rem; font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: 0.3px; }
+.brand-sub { font-size: 0.68rem; color: var(--gold-glow); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.user-badge {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.container { padding: 12px 14px; max-width: 520px; margin: 0 auto; }
+
+/* CANVAS PREVIEW */
+.canvas-wrapper {
+  background: #000;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.8), 0 0 15px rgba(246, 192, 66, 0.2);
+  border: 2px solid var(--gold);
+  margin-bottom: 14px;
+  position: relative;
+  text-align: center;
+}
+canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 460px;
+  object-fit: contain;
+}
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 8px;
+}
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* FORM ELEMENTS */
+.form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+label { font-size: 0.78rem; color: var(--subtext); font-weight: 600; }
+input, select, textarea {
+  background: #120407;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: #fff;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(246, 192, 66, 0.3);
+}
+
+/* FESTIVAL SCROLL */
+.festival-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+.festival-scroll::-webkit-scrollbar { display: none; }
+.fest-chip {
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  touch-action: manipulation;
+}
+.fest-chip.active {
+  background: linear-gradient(135deg, #a61e38 0%, #e0531c 100%);
+  border-color: var(--gold);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(246, 192, 66, 0.4);
+}
+
+/* THEME PILLS */
+.pills-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+}
+.pills-scroll::-webkit-scrollbar { display: none; }
+.theme-pill {
+  border: 2px solid transparent;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.theme-pill.active {
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(255,255,255,0.6);
+  transform: scale(1.05);
+}
+
+/* BUTTONS */
+.btn-block {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.btn-block:active { transform: scale(0.97); }
+.btn-download {
+  background: linear-gradient(135deg, #f26829 0%, #f6c042 100%);
+  color: #1f070e;
+  font-weight: 900;
+  box-shadow: 0 4px 15px rgba(246, 192, 66, 0.4);
+}
+.btn-whatsapp {
+  background: linear-gradient(135deg, #128c7e 0%, #25d366 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.35);
+}
+.btn-primary {
+  background: linear-gradient(135deg, #a61e38 0%, #d83d1c 100%);
+  color: #fff;
+}
+.btn-gpay {
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  color: #fff;
+}
+
+/* BOTTOM FIXED NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #19060b;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 4px calc(6px + var(--safe-bottom));
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.8);
+}
+.nav-tab {
+  background: none; border: none;
+  color: var(--subtext);
+  font-size: 0.7rem; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 6px 12px;
+  cursor: pointer; flex: 1; max-width: 80px;
+}
+.nav-tab span.icon { font-size: 1.35rem; }
+.nav-tab.active { color: var(--gold); }
+.nav-tab.active span.icon { transform: translateY(-2px); filter: drop-shadow(0 0 5px var(--gold)); }
+
+.view-section { display: none; }
+.view-section.active { display: block; animation: fadeIn 0.2s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 80px; left: 50%;
+  transform: translateX(-50%) translateY(50px);
+  background: var(--gold); color: #1a050b; font-weight: 800;
+  padding: 10px 18px; border-radius: 25px; font-size: 0.85rem;
+  opacity: 0; pointer-events: none; transition: 0.3s; z-index: 2000;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* QR CODE BOX */
+.qr-box {
+  background: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  display: inline-block;
+  margin: 10px auto;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+</style>
+</head>
+<body>
+
+<!-- TOP APP BAR -->
+<header class="app-header">
+  <div class="brand">
+    <span class="brand-icon">🪔</span>
+    <div>
+      <div class="brand-title">DigiFestive Maker</div>
+      <div class="brand-sub">BY DIGIGOINDIA ⚡</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="user-badge" id="btnUserBadge">
+      <span>👤</span> <span id="userBadgeName">Login</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ================= TAB 1: POSTER STUDIO ================= -->
+  <section id="view-poster" class="view-section active">
+    
+    <!-- CANVAS LIVE PREVIEW -->
+    <div class="canvas-wrapper">
+      <canvas id="cardCanvas" width="1080" height="1350"></canvas>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+      <button class="btn-block btn-download" id="btnDownloadCard">
+        ⬇️ <span>HD પોસ્ટર સેવ</span>
+      </button>
+      <button class="btn-block btn-whatsapp" id="btnShareWhatsApp">
+        💬 <span>વોટ્સએપ શેર</span>
+      </button>
+    </div>
+
+    <!-- GUJARATI & INDIAN FESTIVALS -->
+    <div class="card" style="border:1px solid var(--gold);">
+      <div class="card-header">
+        <span class="card-title">🚩 <span>તહેવાર પસંદ કરો:</span></span>
+        <span style="font-size:0.75rem; color:var(--gold-glow); font-weight:700;">૧૨+ પર્વ</span>
+      </div>
+      <div class="festival-scroll" id="occasionChips">
+        <!-- Occasion chips rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- CUSTOMIZE DETAILS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">✍️ <span>પોસ્ટર કસ્ટમાઇઝ કરો</span></span>
+        <button id="btnAspectToggle" style="background:var(--surface-2); border:1px solid var(--border); color:var(--gold); padding:4px 8px; border-radius:8px; font-size:0.75rem; font-weight:700;">📐 Post (4:5)</button>
+      </div>
+
+      <div class="form-group">
+        <label>તમારું નામ / પરિવારનું નામ / દુકાન-પેઢી:</label>
+        <input type="text" id="inputSender" placeholder="દા.ત. રમેશભાઈ પટેલ / શ્રી ગણેશ જ્વેલર્સ">
+      </div>
+
+      <div class="form-group">
+        <label>તહેવાર શુભકામના સંદેશ (તમારી રીતે બદલી શકો છો):</label>
+        <textarea id="inputMessage" rows="3"></textarea>
+      </div>
+
+      <!-- THEME SELECTOR -->
+      <label style="margin-bottom:6px; display:block; font-size:0.78rem; color:var(--subtext); font-weight:600;">🎨 કલર થીમ:</label>
+      <div class="pills-scroll" id="themePills">
+        <button class="theme-pill active" style="background:linear-gradient(135deg, #721128, #e0531c);" data-theme="royal">શાહી મરૂન 🪔</button>
+        <button class="theme-pill" style="background:linear-gradient(135deg, #0b1a3a, #163870);" data-theme="midnight">મિડનાઈટ ગોલ્ડ ✨</button>
+        <button class="theme-pill" style="background:linear-gradient(135deg, #103324, #1f6b4a);" data-theme="emerald">લક્ષ્મી ગ્રીન 🪷</button>
+        <button class="theme-pill" style="background:linear-gradient(135deg, #440b2a, #801d57);" data-theme="purple">પર્પલ વાયોલેટ 🎆</button>
+        <button class="theme-pill" style="background:linear-gradient(135deg, #c43808, #f59e0b);" data-theme="kesari">ભગવો કેસરી 🚩</button>
+      </div>
+
+      <!-- PHOTO / LOGO UPLOAD -->
+      <div class="form-group" style="margin-top:12px;">
+        <label>📷 તમારો ફોટો અથવા બિઝનેસ લોગો ઉમેરો:</label>
+        <input type="file" id="userPhotoInput" accept="image/*" style="padding:6px; font-size:0.8rem;">
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= TAB 2: USER PROFILE & LOGIN ================= -->
+  <section id="view-profile" class="view-section">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">👤 <span>યૂઝર રજિસ્ટ્રેશન / પ્રોફાઇલ</span></span>
+        <span style="font-size:0.75rem; color:var(--green); font-weight:700;" id="statusIndicator">● સેવ થયેલ</span>
+      </div>
+      <p style="color:var(--subtext); font-size:0.82rem; margin-bottom:12px;">તમારી માહિતી દાખલ કરો જેથી દર વખતે પોસ્ટરમાં આપમેળે તમારું નામ અને નંબર આવી જાય.</p>
+
+      <div class="form-group">
+        <label>પૂરું નામ (Full Name): *</label>
+        <input type="text" id="regName" placeholder="દા.ત. રમેશભાઈ પટેલ">
+      </div>
+      <div class="form-group">
+        <label>મોબાઈલ નંબર (Mobile / WhatsApp): *</label>
+        <input type="tel" id="regMobile" placeholder="9876543210">
+      </div>
+      <div class="form-group">
+        <label>દુકાન / બિઝનેસ / પેઢીનું નામ (વૈકલ્પિક):</label>
+        <input type="text" id="regBusiness" placeholder="દા.ત. પટેલ ટ્રેડિંગ કંપની">
+      </div>
+      <div class="form-group">
+        <label>ગામ / શહેર (City):</label>
+        <input type="text" id="regCity" placeholder="દા.ત. સુરત, અમદાવાદ, રાજકોટ">
+      </div>
+
+      <button class="btn-block btn-primary" id="btnSaveProfile">
+        💾 <span>પ્રોફાઇલ સેવ કરો / Login</span>
+      </button>
+    </div>
+
+    <!-- VIP / PREMIUM ACCESS NOTICE -->
+    <div class="card" style="border:1px solid var(--gold); background: #260a14;">
+      <div class="card-header">
+        <span class="card-title">👑 <span>DigiGoIndia VIP સદસ્યતા</span></span>
+        <span style="background:var(--gold); color:#120407; font-size:0.7rem; font-weight:900; padding:2px 8px; border-radius:10px;">LIFE-TIME</span>
+      </div>
+      <p style="font-size:0.82rem; color:var(--text); line-height:1.45; margin-bottom:10px;">
+        આજીવન તમામ ૧૨+ તહેવારોના વોટરમાર્ક વગરના HD પોસ્ટર, પ્રીમિયમ કાર્ડ અને વોટ્સએપ શુભેચ્છાઓ અનલિમિટેડ ડાઉનલોડ કરવા માટે VIP પ્લાન એક્ટિવેટ કરો.
+      </p>
+      <button class="btn-block btn-download" id="btnGoPayTab">
+        ⚡ <span>VIP અનલોક કરો (માત્ર ₹99)</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= TAB 3: OFFICIAL GPAY & UPI PAYMENT ================= -->
+  <section id="view-payment" class="view-section">
+    <div class="card" style="text-align:center; border:1px solid var(--gold);">
+      <div class="card-header">
+        <span class="card-title">💳 <span>DigiGoIndia ઓફિશિયલ પેમેન્ટ</span></span>
+        <span style="color:var(--green); font-size:0.75rem; font-weight:800;">100% સુરક્ષિત UPI</span>
+      </div>
+
+      <p style="font-size:0.85rem; color:var(--gold-glow); font-weight:700; margin-top:4px;">
+        DIGIFESTIVE VIP સદસ્યતા ફી: ₹99 (લાઈફટાઇમ)
+      </p>
+
+      <!-- DYNAMIC QR CODE FOR USER'S EXACT UPI -->
+      <div class="qr-box">
+        <img id="upiQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi%3A%2F%2Fpay%3Fpa%3Dkachhad.2000%40ptaxis%26pn%3DDigiGoIndia%26am%3D99%26cu%3DINR%26tn%3DDigiFestive%2520VIP" alt="GPay UPI QR Code" style="width:180px; height:180px; display:block;">
+      </div>
+
+      <div style="background:var(--surface-2); border-radius:12px; padding:12px; margin:10px 0; text-align:left; font-size:0.82rem;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span style="color:var(--subtext);">GPay નંબર:</span>
+          <b style="color:#fff; font-size:0.95rem;">7486962020</b>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span style="color:var(--subtext);">UPI ID:</span>
+          <b style="color:var(--gold); font-size:0.9rem;">kachhad.2000@ptaxis</b>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--subtext);">બ્રાન્ડ:</span>
+          <b style="color:#fff;">DigiGoIndia</b>
+        </div>
+      </div>
+
+      <!-- DIRECT GPAY / UPI APP OPEN BUTTON -->
+      <a href="upi://pay?pa=kachhad.2000@ptaxis&pn=DigiGoIndia&am=99&cu=INR&tn=DigiFestive%20VIP" class="btn-block btn-gpay" style="text-decoration:none; margin-bottom:8px;">
+        <span>📱</span> <span>GPay / PhonePe / Paytm થી ચૂકવો (₹99)</span>
+      </a>
+
+      <!-- CONFIRM PAYMENT VIA WHATSAPP -->
+      <button class="btn-block btn-whatsapp" id="btnConfirmPayWA">
+        <span>💬</span> <span>પેમેન્ટ સ્ક્રીનશોટ વોટ્સએપ કરો</span>
+      </button>
+
+      <p style="font-size:0.75rem; color:var(--subtext); margin-top:8px;">
+        પેમેન્ટ કર્યા પછી સ્ક્રીનશોટ મોકલતા જ તમારું એકાઉન્ટ ૧ મિનિટમાં વેરિફાઈ થઈ જશે.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= TAB 4: ADMIN DESK & USER CSV EXPORT ================= -->
+  <section id="view-admin" class="view-section">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📊 <span>એડમિન ડેશબોર્ડ & CSV ડેટા</span></span>
+        <button id="btnExportCSV" style="background:var(--gold); color:#120407; border:none; padding:4px 10px; border-radius:10px; font-size:0.75rem; font-weight:900; cursor:pointer;">
+          ⬇️ Download CSV
+        </button>
+      </div>
+
+      <p style="color:var(--subtext); font-size:0.82rem; margin-bottom:10px;">
+        તમામ રજિસ્ટર્ડ યૂઝર્સ, તેમના મોબાઈલ નંબર અને ડાઉનલોડ કરેલ પોસ્ટરનો ડેટા અહીં સુરક્ષિત છે.
+      </p>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div style="background:var(--surface-2); padding:10px; border-radius:10px; text-align:center;">
+          <div style="font-size:0.72rem; color:var(--subtext);">કુલ યૂઝર્સ ડેટાબેઝ</div>
+          <div style="font-size:1.3rem; font-weight:900; color:var(--gold);" id="statUserCount">0</div>
+        </div>
+        <div style="background:var(--surface-2); padding:10px; border-radius:10px; text-align:center;">
+          <div style="font-size:0.72rem; color:var(--subtext);">કુલ બનાવેલ પોસ્ટર્સ</div>
+          <div style="font-size:1.3rem; font-weight:900; color:var(--green);" id="statPosterCount">0</div>
+        </div>
+      </div>
+
+      <div style="font-weight:700; color:var(--gold); font-size:0.85rem; margin-bottom:6px;">યૂઝર લિસ્ટ (User Records):</div>
+      <div id="adminUserTable" style="max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:6px;">
+        <!-- dynamic rows -->
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- BOTTOM NAVIGATION BAR -->
+<nav class="bottom-nav">
+  <button class="nav-tab active" data-target="view-poster">
+    <span class="icon">🖼️</span>
+    <span>પોસ્ટર</span>
+  </button>
+  <button class="nav-tab" data-target="view-profile">
+    <span class="icon">👤</span>
+    <span>પ્રોફાઇલ</span>
+  </button>
+  <button class="nav-tab" data-target="view-payment">
+    <span class="icon">💳</span>
+    <span>પેમેન્ટ</span>
+  </button>
+  <button class="nav-tab" data-target="view-admin">
+    <span class="icon">📊</span>
+    <span>એડમિન</span>
+  </button>
+</nav>
+
+<div class="toast" id="appToast">કૉપી થયું!</div>
+
+<script>
+// ================= GUJARATI FESTIVALS DATABASE =================
+const FESTIVALS = [
+  { id: 'diwali', icon: '🪔', title: "દિવાળી", main: "શુભ દિવાળી", sub: "SHUBH DEEPAWALI", msg: "આપના જીવનમાં સુખ, શાંતિ, સ્વાસ્થ્ય અને સમૃદ્ધિ આવે તેવી હાર્દિક શુભકામનાઓ.", symbol: "diya" },
+  { id: 'nutanvarsh', icon: '✨', title: "નૂતન વર્ષાભિનંદન", main: "નૂતન વર્ષાભિનંદન", sub: "SAAL MUBARAK", msg: "નવું વર્ષ આપના અને આપના સમગ્ર પરિવાર માટે સુખમય, પ્રગતિકારક અને મંગલમય રહે.", symbol: "kalash" },
+  { id: 'dhanteras', icon: '🪙', title: "ધનતેરસ", main: "શુભ ધનતેરસ", sub: "HAPPY DHANTERAS", msg: "માઁ લક્ષ્મી અને ધન્વંતરી ભગવાન આપના ઘરમાં અખૂટ ધન, વૈભવ અને નિરોગી સ્વાસ્થ્ય આપે.", symbol: "coins" },
+  { id: 'kalichaudas', icon: '🛡️', title: "કાળી ચૌદશ", main: "કાળી ચૌદશ", sub: "KALI CHAUDAS", msg: "માઁ મહાકાળી અને હનુમાનજી દાદા આપના સર્વ કષ્ટો અને નકારાત્મકતા દૂર કરી રક્ષણ કરે.", symbol: "trishul" },
+  { id: 'bhaibeej', icon: '🌸', title: "ભાઈબીજ", main: "શુભ ભાઈબીજ", sub: "HAPPY BHAI BEEJ", msg: "ભાઈ-બહેનના અતૂટ પ્રેમ અને સ્નેહના પવિત્ર પર્વ ભાઈબીજની હાર્દિક શુભકામનાઓ.", symbol: "flower" },
+  { id: 'labhpacham', icon: '📈', title: "લાભ પાંચમ", main: "શુભ લાભ પાંચમ", sub: "SHUBH LABH PACHAM", msg: "નવા વ્યાપાર-ધંધામાં ઉત્તરોત્તર પ્રગતિ, લાભ અને શ્રી ગણેશજીની અસીમ કૃપા બની રહે.", symbol: "swastik" },
+  { id: 'devdiwali', icon: '🪷', title: "દેવ દિવાળી", main: "દેવ દિવાળી", sub: "DEV DIWALI & TULSI VIVAH", msg: "તુલસી વિવાહ અને દેવ દિવાળીના પાવન પર્વે આપના જીવનમાં દૈવી તેજ અને શાંતિ પથરાય.", symbol: "tulsi" },
+  { id: 'sharadpoonam', icon: '🌕', title: "શરદ પૂનમ", main: "શરદ પૂર્ણિમા", sub: "SHARAD POORNIMA", msg: "શરદ ઋતુના શીતળ ચાંદની જેવી શાંતિ અને સુખ આપના પરિવારમાં સદા રહે.", symbol: "moon" },
+  { id: 'navratri', icon: '💃', title: "નવરાત્રિ", main: "શુભ નવરાત્રિ", sub: "HAPPY NAVRATRI", msg: "માઁ અંબા, દુર્ગા આપના પરિવારને સુખ, શક્તિ અને સર્વ મનોકામના પૂર્ણ કરે.", symbol: "garba" },
+  { id: 'makarsankranti', icon: '🪁', title: "ઉત્તરાયણ", main: "મકર સંક્રાંતિ", sub: "HAPPY UTTARAYAN", msg: "પતંગની જેમ આપની પ્રગતિ આકાશની નવી ઊંચાઈઓ આંબે તેવી મંગલ કામનાઓ.", symbol: "kite" },
+  { id: 'janmashtami', icon: '🦚', title: "જન્માષ્ટમી", main: "શ્રી કૃષ્ણ જન્મોત્સવ", sub: "HAPPY JANMASHTAMI", msg: "નંદ ઘેર આનંદ ભયો, જય કનૈયા લાલ કી! શ્રીકૃષ્ણ કૃપા આપના પર સદા રહે.", symbol: "peacock" },
+  { id: 'ganeshchaturthi', icon: '🐘', title: "ગણેશ ચતુર્થી", main: "ગણેશ મહોત્સવ", sub: "GANESH CHATURTHI", msg: "વિઘ્નહર્તા શ્રી ગણેશજી આપના સર્વ વિઘ્નો હરી સુખ અને રિદ્ધિ-સિદ્ધિ આપે.", symbol: "modak" }
+];
+
+// Color Themes
+const THEMES = {
+  royal: { bg1: "#5c0e20", bg2: "#9e1f37", bg3: "#e0531c", gold: "#f6c042", accent: "#ffdc82" },
+  midnight: { bg1: "#061026", bg2: "#0f2347", bg3: "#1a3b70", gold: "#ffd700", accent: "#fff0a0" },
+  emerald: { bg1: "#062215", bg2: "#0d3b25", bg3: "#165c3b", gold: "#f5c542", accent: "#ffe28a" },
+  purple: { bg1: "#29061b", bg2: "#4a0f32", bg3: "#7a1a54", gold: "#ffc857", accent: "#ffdf96" },
+  kesari: { bg1: "#7a1e05", bg2: "#c43808", bg3: "#f59e0b", gold: "#ffe082", accent: "#fff3cf" }
+};
+
+// ================= APP STATE =================
+let selectedOccasion = FESTIVALS[0];
+let currentTheme = 'royal';
+let userUploadedImg = null;
+let isPortraitStory = false;
+
+// Local Storage for Users & CSV Data
+let userProfile = {};
+let allUsersDb = [];
+let posterDownloadCount = 0;
+
+try {
+  userProfile = JSON.parse(localStorage.getItem('digifestive_profile') || '{}');
+  allUsersDb = JSON.parse(localStorage.getItem('digifestive_users_db') || '[]');
+  posterDownloadCount = Number(localStorage.getItem('digifestive_posters_count') || 0);
+} catch(e) {}
+
+const $ = id => document.getElementById(id);
+
+function showToast(msg) {
+  const toast = $('appToast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+// ================= INITIAL SETUP =================
+function init() {
+  // Render Festival Chips
+  const chipsBox = $('occasionChips');
+  chipsBox.innerHTML = '';
+  FESTIVALS.forEach((occ, idx) => {
+    const chip = document.createElement('button');
+    chip.className = `fest-chip ${idx === 0 ? 'active' : ''}`;
+    chip.innerHTML = `<span>${occ.icon}</span> <span>${occ.title}</span>`;
+    chip.onclick = () => {
+      document.querySelectorAll('.fest-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      selectedOccasion = occ;
+      $('inputMessage').value = occ.msg;
+      drawCard();
+    };
+    chipsBox.appendChild(chip);
+  });
+
+  // Pre-fill profile if saved
+  if (userProfile.name) {
+    $('regName').value = userProfile.name || '';
+    $('regMobile').value = userProfile.mobile || '';
+    $('regBusiness').value = userProfile.business || '';
+    $('regCity').value = userProfile.city || '';
+    $('inputSender').value = userProfile.business ? `${userProfile.name} (${userProfile.business})` : userProfile.name;
+    $('userBadgeName').textContent = userProfile.name.split(' ')[0];
+  }
+
+  $('inputMessage').value = selectedOccasion.msg;
+  drawCard();
+  updateAdminView();
+}
+
+// ================= CANVAS DRAWING =================
+function drawCard() {
+  const canvas = $('cardCanvas');
+  const ctx = canvas.getContext('2d');
+  
+  const width = 1080;
+  const height = isPortraitStory ? 1920 : 1350;
+  canvas.width = width;
+  canvas.height = height;
+
+  const th = THEMES[currentTheme];
+
+  // Background Gradient
+  const grad = ctx.createLinearGradient(0, 0, width, height);
+  grad.addColorStop(0, th.bg1);
+  grad.addColorStop(0.5, th.bg2);
+  grad.addColorStop(1, th.bg3);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, width, height);
+
+  // Sparkles
+  ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+  for (let i = 0; i < 45; i++) {
+    const sx = (i * 143) % width;
+    const sy = (i * 227) % height;
+    ctx.beginPath();
+    ctx.arc(sx, sy, (i % 3) + 1.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Golden Royal Borders
+  const m = 45;
+  ctx.strokeStyle = th.gold;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(m, m, width - 2 * m, height - 2 * m);
+
+  ctx.strokeStyle = "rgba(246, 192, 66, 0.4)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(m + 16, m + 16, width - 2 * (m + 16), height - 2 * (m + 16));
+
+  const centerX = width / 2;
+  const artY = isPortraitStory ? height * 0.36 : height * 0.31;
+
+  // Draw Festival Vector Motif
+  drawFestivalArt(ctx, centerX, artY, selectedOccasion.symbol, th);
+
+  // Typography
+  ctx.textAlign = "center";
+  ctx.font = "bold 34px -apple-system, sans-serif";
+  ctx.fillStyle = th.accent;
+  ctx.fillText(selectedOccasion.sub, centerX, artY + 140);
+
+  ctx.font = "900 78px -apple-system, sans-serif";
+  ctx.fillStyle = "#ffffff";
+  ctx.shadowColor = "rgba(0,0,0,0.75)";
+  ctx.shadowBlur = 12;
+  ctx.fillText(selectedOccasion.main, centerX, artY + 230);
+  ctx.shadowBlur = 0;
+
+  // Separator
+  ctx.strokeStyle = th.gold;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(centerX - 170, artY + 270);
+  ctx.lineTo(centerX + 170, artY + 270);
+  ctx.stroke();
+
+  // Message
+  const message = $('inputMessage').value || selectedOccasion.msg;
+  ctx.font = "500 36px -apple-system, sans-serif";
+  ctx.fillStyle = "#fff4e6";
+  wrapText(ctx, message, centerX, artY + 340, width - 220, 52);
+
+  // User Uploaded Image
+  if (userUploadedImg) {
+    const pSize = 125;
+    const pX = centerX - pSize / 2;
+    const pY = isPortraitStory ? height - 380 : height - 280;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(centerX, pY + pSize / 2, pSize / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(userUploadedImg, pX, pY, pSize, pSize);
+    ctx.restore();
+
+    ctx.strokeStyle = th.gold;
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(centerX, pY + pSize / 2, pSize / 2 + 2, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Footer Signature & DigiGoIndia Brand Badge
+  const sender = $('inputSender').value.trim();
+  const footerY = height - 95;
+  if (sender) {
+    ctx.font = "600 28px -apple-system, sans-serif";
+    ctx.fillStyle = th.accent;
+    ctx.fillText("શુભેચ્છક / Best Compliments From:", centerX, footerY - 45);
+
+    ctx.font = "bold 44px -apple-system, sans-serif";
+    ctx.fillStyle = th.gold;
+    ctx.fillText(sender, centerX, footerY);
+  } else {
+    ctx.font = "italic 32px -apple-system, sans-serif";
+    ctx.fillStyle = th.accent;
+    ctx.fillText("✨ Happy & Blessed Festive Celebrations ✨", centerX, footerY);
+  }
+
+  // Small brand credit
+  ctx.font = "bold 16px -apple-system, sans-serif";
+  ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+  ctx.textAlign = "right";
+  ctx.fillText("CREATED VIA DIGIGOINDIA", width - 60, height - 55);
+}
+
+function drawFestivalArt(ctx, cx, cy, symbol, th) {
+  const glow = ctx.createRadialGradient(cx, cy - 40, 10, cx, cy - 40, 160);
+  glow.addColorStop(0, "rgba(255, 215, 0, 0.45)");
+  glow.addColorStop(0.7, "rgba(242, 104, 41, 0.2)");
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(cx, cy - 40, 160, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (symbol === 'kalash' || symbol === 'swastik') {
+    ctx.fillStyle = "#b53a25";
+    ctx.beginPath();
+    ctx.arc(cx, cy + 20, 65, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = th.gold;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.fillStyle = "#4a2810";
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - 45, 32, 42, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#2ecc71";
+    [-35, 0, 35].forEach(off => {
+      ctx.beginPath();
+      ctx.ellipse(cx + off, cy - 25, 14, 30, (off * Math.PI) / 180, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  } else if (symbol === 'coins') {
+    ctx.fillStyle = "#b53a25";
+    ctx.beginPath();
+    ctx.arc(cx, cy + 25, 70, 0, Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = th.gold;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+
+    ctx.fillStyle = "#ffc107";
+    for (let c = -40; c <= 40; c += 20) {
+      ctx.beginPath();
+      ctx.arc(cx + c, cy - 10, 22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  } else if (symbol === 'kite') {
+    ctx.save();
+    ctx.translate(cx, cy - 20);
+    ctx.rotate(-Math.PI / 8);
+    ctx.fillStyle = "#ff5722";
+    ctx.beginPath();
+    ctx.moveTo(0, -70); ctx.lineTo(60, 0); ctx.lineTo(0, 70); ctx.lineTo(-60, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = th.gold;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.restore();
+  } else {
+    // Diya
+    ctx.fillStyle = "#ffb703";
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - 70, 30, 65, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#fb8500";
+    ctx.beginPath();
+    ctx.ellipse(cx, cy - 55, 18, 42, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#b53a25";
+    ctx.beginPath();
+    ctx.arc(cx, cy, 100, 0, Math.PI, false);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = th.gold;
+    ctx.lineWidth = 5;
+    ctx.stroke();
+  }
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && n > 0) {
+      ctx.fillText(line.trim(), x, y);
+      line = words[n] + " ";
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line.trim(), x, y);
+}
+
+// ================= SAVE PROFILE & CSV LOGIC =================
+$('btnSaveProfile').onclick = () => {
+  const name = $('regName').value.trim();
+  const mobile = $('regMobile').value.trim();
+  const business = $('regBusiness').value.trim();
+  const city = $('regCity').value.trim();
+
+  if (!name || !mobile) {
+    alert('કૃપા કરીને પૂરું નામ અને મોબાઈલ નંબર દાખલ કરો.');
+    return;
+  }
+
+  userProfile = { name, mobile, business, city, regDate: new Date().toLocaleDateString('en-IN') };
+  localStorage.setItem('digifestive_profile', JSON.stringify(userProfile));
+
+  // Check if exists in DB, else push
+  const existsIdx = allUsersDb.findIndex(u => u.mobile === mobile);
+  if (existsIdx >= 0) {
+    allUsersDb[existsIdx] = userProfile;
+  } else {
+    allUsersDb.push(userProfile);
+  }
+  localStorage.setItem('digifestive_users_db', JSON.stringify(allUsersDb));
+
+  $('inputSender').value = business ? `${name} (${business})` : name;
+  $('userBadgeName').textContent = name.split(' ')[0];
+  
+  showToast('પ્રોફાઇલ સેવ થઈ ગયું! ✅');
+  drawCard();
+  updateAdminView();
+  
+  // Return to poster
+  document.querySelector('[data-target="view-poster"]').click();
+};
+
+function updateAdminView() {
+  $('statUserCount').textContent = allUsersDb.length;
+  $('statPosterCount').textContent = posterDownloadCount;
+
+  const table = $('adminUserTable');
+  table.innerHTML = '';
+  if (allUsersDb.length === 0) {
+    table.innerHTML = '<p style="color:var(--subtext); font-size:0.8rem; text-align:center; padding:10px;">હજુ સુધી કોઈ યૂઝર રજિસ્ટર નથી થયા.</p>';
+    return;
+  }
+
+  allUsersDb.forEach((u, idx) => {
+    const row = document.createElement('div');
+    row.style.background = 'var(--surface-2)';
+    row.style.borderRadius = '8px';
+    row.style.padding = '8px 10px';
+    row.style.fontSize = '0.8rem';
+    row.style.display = 'flex';
+    row.style.justifyContent = 'space-between';
+    row.style.alignItems = 'center';
+    row.innerHTML = `
+      <div>
+        <b style="color:#fff;">${u.name}</b> <span style="color:var(--subtext);">(${u.city || 'Gujarat'})</span>
+        <div style="color:var(--gold); font-size:0.75rem;">📞 ${u.mobile} • ${u.business || 'Individual'}</div>
+      </div>
+      <a href="https://wa.me/91${u.mobile}" target="_blank" style="text-decoration:none; background:#25d366; color:#fff; padding:4px 8px; border-radius:6px; font-size:0.7rem; font-weight:700;">WhatsApp</a>
+    `;
+    table.appendChild(row);
+  });
+}
+
+// Download CSV of all users
+$('btnExportCSV').onclick = () => {
+  if (allUsersDb.length === 0) {
+    alert('હજુ સુધી કોઈ યૂઝર ડેટા નથી.');
+    return;
+  }
+  let csv = 'Name,Mobile,Business,City,RegistrationDate\n';
+  allUsersDb.forEach(u => {
+    csv += `"${u.name}","${u.mobile}","${u.business || ''}","${u.city || ''}","${u.regDate || ''}"\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `DigiFestive_Users_Database_${Date.now()}.csv`;
+  a.click();
+  showToast('CSV ફાઇલ ડાઉનલોડ થઈ ગઈ! 📊');
+};
+
+// ================= EVENT LISTENERS =================
+$('inputSender').oninput = drawCard;
+$('inputMessage').oninput = drawCard;
+
+document.querySelectorAll('.theme-pill').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.theme-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTheme = btn.dataset.theme;
+    drawCard();
+  };
+});
+
+$('btnAspectToggle').onclick = () => {
+  isPortraitStory = !isPortraitStory;
+  $('btnAspectToggle').textContent = isPortraitStory ? '📐 Story (9:16)' : '📐 Post (4:5)';
+  drawCard();
+};
+
+$('userPhotoInput').onchange = e => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        userUploadedImg = img;
+        drawCard();
+        showToast('ફોટો ઉમેરાઈ ગયો! 📷');
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+$('btnDownloadCard').onclick = () => {
+  const canvas = $('cardCanvas');
+  const link = document.createElement('a');
+  link.download = `DigiFestive_${selectedOccasion.id}_${Date.now()}.jpg`;
+  link.href = canvas.toDataURL('image/jpeg', 0.95);
+  link.click();
+  
+  posterDownloadCount++;
+  localStorage.setItem('digifestive_posters_count', posterDownloadCount);
+  updateAdminView();
+  showToast('HD પોસ્ટર સેવ થઈ ગયું! 📥');
+};
+
+$('btnShareWhatsApp').onclick = () => {
+  const sender = $('inputSender').value.trim();
+  const textMsg = `🚩 *${selectedOccasion.main}* 🚩\n\n${$('inputMessage').value}\n\nશુભેચ્છક:\n*${sender || 'સમસ્ત પરિવાર તરફથી'}* ✨\n\n_Created via DigiFestive Maker (DigiGoIndia)_`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(textMsg)}`, '_blank');
+};
+
+$('btnConfirmPayWA').onclick = () => {
+  const msg = `નમસ્તે DigiGoIndia! 🙏 મેં DigiFestive Maker VIP સદસ્યતા માટે GPay/UPI (₹99) કરી દીધું છે. કૃપા કરીને મારું એકાઉન્ટ વેરિફાઈ કરશો.\n\nUPI: kachhad.2000@ptaxis\nGPay No: 7486962020\nનામ: ${userProfile.name || ''}\nમોબાઈલ: ${userProfile.mobile || ''}`;
+  window.open(`https://wa.me/917486962020?text=${encodeURIComponent(msg)}`, '_blank');
+};
+
+$('btnGoPayTab').onclick = () => {
+  document.querySelector('[data-target="view-payment"]').click();
+};
+
+$('btnUserBadge').onclick = () => {
+  document.querySelector('[data-target="view-profile"]').click();
+};
+
+// Tab Switching
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    $(tab.dataset.target).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+});
+
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+init();
+</script>
+</body>
+</html>
